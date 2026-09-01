@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jhonabruzzi278/ai-project-standard/schemas/PROJECT.schema.json",
+  "title": "AI Project Standard Project",
+  "description": "Placeholder inicial para el contrato PROJECT.yaml.",
+  "type": "object",
+  "additionalProperties": true
+}
