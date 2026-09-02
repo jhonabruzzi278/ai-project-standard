@@ -3,6 +3,11 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+if [[ ${EUID} -ne 0 ]]; then
+  echo "prepare-cloud.sh must run as root: sudo ./prepare-cloud.sh" >&2
+  exit 1
+fi
+
 if [[ ! -f .env.cloud ]]; then
   echo "Missing .env.cloud. Copy .env.cloud.example and insert the real values." >&2
   exit 1
@@ -31,7 +36,18 @@ if [[ ! -d "$PROJECTS_DIR" ]]; then
   exit 1
 fi
 
-mkdir -p "${HERMES_DATA_DIR:-./data/hermes-cloud}" "${HERMES_STATE_DIR:-./data/state-cloud}" ../../.hermes
+container_uid="${HERMES_CONTAINER_UID:-10000}"
+container_gid="${HERMES_CONTAINER_GID:-10000}"
+if [[ ! "$container_uid" =~ ^[0-9]+$ || ! "$container_gid" =~ ^[0-9]+$ ]]; then
+  echo "HERMES_CONTAINER_UID and HERMES_CONTAINER_GID must be numeric." >&2
+  exit 1
+fi
+
+state_dir="${HERMES_STATE_DIR:-./data/state-cloud}"
+mkdir -p "${HERMES_DATA_DIR:-./data/hermes-cloud}" "$state_dir" ../../.hermes
+chown -R "$container_uid:$container_gid" "$state_dir"
+chown ":$container_gid" "$PROJECTS_DIR"
+chmod 2750 "$PROJECTS_DIR"
 
 config_target="${HERMES_DATA_DIR:-./data/hermes-cloud}/config.yaml"
 if [[ ! -f "$config_target" ]]; then
