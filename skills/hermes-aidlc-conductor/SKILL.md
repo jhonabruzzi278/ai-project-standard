@@ -42,3 +42,17 @@ Use this skill when the user asks to analyze, organize, assess, plan, improve, o
 Analysis permission does not imply modification permission. Construction and operation remain disabled until the user approves a concrete plan naming the target project, intended files or commands, expected effect, and rollback approach.
 
 Never silently skip a failed sensor, unreadable path, missing artifact, or uncertain conclusion.
+
+## Evidence protocol
+
+Before presenting any analysis:
+
+1. Enumerate the exact target paths with read-only tools. Verify every cited path exists.
+2. Count skills from actual `skills/hermes-*/SKILL.md` files and count lifecycle stages separately from `harness/aidlc-stage-catalog.json`; never conflate them.
+3. Distinguish repository capabilities from the active runtime. A configuration file mentioning Ollama, OpenRouter, CI, tests, or deployment does not prove that capability is active.
+4. Support every structural, technology, security, and quantity claim with an exact path or bounded command result.
+5. If evidence is missing or a tool fails, label the claim `not verified`; do not fill gaps from model knowledge.
+6. Do not name a directory, module, service, control, dependency, or operational risk unless it was observed in the target or explicitly labeled as a hypothesis.
+7. Run a contradiction pass before the final answer: confirm counts, paths, active profile, and scope against the gathered evidence.
+
+The final report must include an evidence table with `claim`, `classification`, and `source`. Recommendations based on unverified assumptions are prohibited.
