@@ -31,7 +31,7 @@ if [[ ! -d "$PROJECTS_DIR" ]]; then
   exit 1
 fi
 
-mkdir -p "${HERMES_DATA_DIR:-./data/hermes-cloud}" "${HERMES_STATE_DIR:-./data/state-cloud}"
+mkdir -p "${HERMES_DATA_DIR:-./data/hermes-cloud}" "${HERMES_STATE_DIR:-./data/state-cloud}" ../../.hermes
 
 config_target="${HERMES_DATA_DIR:-./data/hermes-cloud}/config.yaml"
 if [[ ! -f "$config_target" ]]; then
