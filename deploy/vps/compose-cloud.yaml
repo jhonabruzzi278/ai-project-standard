@@ -23,10 +23,18 @@ services:
       - ${PROJECTS_DIR:?PROJECTS_DIR must be set in .env.cloud}:/workspace/projects:ro
     read_only: true
     tmpfs:
-      - /tmp:size=128m,mode=1777
+      - /tmp:rw,nosuid,size=128m,mode=1777
+      - /var/tmp:rw,noexec,nosuid,size=64m,mode=1777
+      - /run:rw,exec,nosuid,size=64m
     security_opt:
       - no-new-privileges:true
     cap_drop: [ALL]
+    cap_add:
+      - SETUID
+      - SETGID
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
     mem_limit: 768m
     cpus: 0.75
     pids_limit: 256

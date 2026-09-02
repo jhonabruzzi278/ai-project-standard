@@ -2,7 +2,7 @@
 
 This is the recommended test deployment for a VPS with 2 vCPU, 4 GB RAM and 80 GB disk. Ollama is not installed on the VPS. Hermes Agent uses OpenRouter's free-model router and keeps project files mounted read-only.
 
-The container is limited to 768 MB RAM, 0.75 CPU, 256 processes, a 128 MB temporary filesystem, and three rotated 10 MB Docker log files. The host should have at least 2 GB of swap configured before starting this profile when it shares the VPS with production services.
+The container is limited to 768 MB RAM, 0.75 CPU, 256 processes, a 128 MB `/tmp`, 64 MB `/var/tmp`, an executable 64 MB `/run` for s6-overlay, and three rotated 10 MB Docker log files. The host should have at least 2 GB of swap configured before starting this profile when it shares the VPS with production services.
 
 ## Free model routing
 
