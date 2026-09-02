@@ -2,6 +2,8 @@
 
 Hermes uses `openrouter/free` instead of pinning one promotional model. The router filters the current free pool for required request features such as tool calling and structured output, then selects an available model.
 
+Auxiliary tasks are separately pinned to a `:free` model and guarded by `auxiliary.free_only: true`. This prevents Hermes context compression, title generation, extraction, and similar background work from silently selecting a paid OpenRouter fallback.
+
 Benefits:
 
 - No prompt or completion token charge for requests routed to free variants.

@@ -8,6 +8,10 @@ provider_routing:
   require_parameters: true
   data_collection: deny
 
+auxiliary:
+  free_only: true
+  openrouter_model: nvidia/nemotron-3-ultra-550b-a55b:free
+
 skills:
   external_dirs:
     - /opt/hermes-aidlc/skills
