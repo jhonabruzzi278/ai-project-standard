@@ -36,7 +36,7 @@ cp .env.cloud.example .env.cloud
 chmod 600 .env.cloud
 nano .env.cloud
 chmod +x prepare-cloud.sh
-./prepare-cloud.sh
+sudo ./prepare-cloud.sh
 sudo docker compose --env-file .env.cloud -f compose-cloud.yaml up -d
 sudo docker compose --env-file .env.cloud -f compose-cloud.yaml ps
 sudo docker compose --env-file .env.cloud -f compose-cloud.yaml logs --tail=100 hermes
