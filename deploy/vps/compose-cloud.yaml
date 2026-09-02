@@ -1,0 +1,42 @@
+name: hermes-aidlc-cloud
+
+services:
+  hermes:
+    image: nousresearch/hermes-agent:${HERMES_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    environment:
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?OPENROUTER_API_KEY must be set in .env.cloud}
+      API_SERVER_ENABLED: "true"
+      API_SERVER_HOST: 0.0.0.0
+      API_SERVER_PORT: 8642
+      API_SERVER_KEY: ${API_SERVER_KEY:?API_SERVER_KEY must be set in .env.cloud}
+      API_SERVER_CORS_ORIGINS: ${API_SERVER_CORS_ORIGINS:-http://localhost}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_ALLOWED_USERS: ${TELEGRAM_ALLOWED_USERS:-}
+    ports:
+      - "127.0.0.1:${HERMES_API_PORT:-8642}:8642"
+    volumes:
+      - ${HERMES_DATA_DIR:-./data/hermes-cloud}:/opt/data
+      - ../..:/opt/hermes-aidlc:ro
+      - ${HERMES_STATE_DIR:-./data/state-cloud}:/opt/hermes-aidlc/.hermes
+      - ${PROJECTS_DIR:?PROJECTS_DIR must be set in .env.cloud}:/workspace/projects:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    mem_limit: 768m
+    cpus: 0.75
+    pids_limit: 256
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks: [hermes-internal]
+
+networks:
+  hermes-internal:
+    driver: bridge

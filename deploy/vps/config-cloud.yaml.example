@@ -1,0 +1,33 @@
+model:
+  provider: openrouter
+  default: openrouter/free
+  base_url: ''
+  api_mode: chat_completions
+
+provider_routing:
+  require_parameters: true
+  data_collection: deny
+
+skills:
+  external_dirs:
+    - /opt/hermes-aidlc/skills
+
+terminal:
+  backend: local
+  cwd: /workspace/projects
+  timeout: 180
+
+platforms:
+  telegram:
+    enabled: false
+
+agent:
+  max_turns: 35
+  tool_use_enforcement: true
+
+delegation:
+  max_concurrent_children: 1
+  max_spawn_depth: 1
+
+security:
+  tirith_enabled: true

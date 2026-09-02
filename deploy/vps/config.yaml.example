@@ -1,0 +1,22 @@
+model:
+  default: qwen3.5:9b
+  provider: custom
+  base_url: http://ollama:11434/v1
+  api_key: ollama
+  context_length: 65536
+
+skills:
+  external_dirs:
+    - /opt/hermes-aidlc/skills
+
+terminal:
+  backend: local
+  cwd: /workspace/projects
+  timeout: 180
+
+platforms:
+  telegram:
+    enabled: false
+
+agent:
+  tool_use_enforcement: true

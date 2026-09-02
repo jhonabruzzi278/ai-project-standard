@@ -1,0 +1,62 @@
+name: hermes-aidlc
+
+services:
+  ollama:
+    image: ollama/ollama:${OLLAMA_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    environment:
+      OLLAMA_CONTEXT_LENGTH: ${OLLAMA_CONTEXT_LENGTH:-65536}
+    volumes:
+      - ${OLLAMA_DATA_DIR:-./data/ollama}:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks: [hermes-internal]
+
+  ollama-model:
+    image: ollama/ollama:${OLLAMA_IMAGE_TAG:-latest}
+    restart: "no"
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    command: ["pull", "${OLLAMA_MODEL:-qwen3.5:9b}"]
+    depends_on:
+      ollama:
+        condition: service_healthy
+    networks: [hermes-internal]
+
+  hermes:
+    image: nousresearch/hermes-agent:${HERMES_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    depends_on:
+      ollama-model:
+        condition: service_completed_successfully
+    environment:
+      API_SERVER_ENABLED: "true"
+      API_SERVER_HOST: 0.0.0.0
+      API_SERVER_PORT: 8642
+      API_SERVER_KEY: ${API_SERVER_KEY:?API_SERVER_KEY must be set in .env}
+      API_SERVER_CORS_ORIGINS: ${API_SERVER_CORS_ORIGINS:-http://localhost}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_ALLOWED_USERS: ${TELEGRAM_ALLOWED_USERS:-}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+    ports:
+      - "127.0.0.1:${HERMES_API_PORT:-8642}:8642"
+    volumes:
+      - ${HERMES_DATA_DIR:-./data/hermes}:/opt/data
+      - ../..:/opt/hermes-aidlc:ro
+      - ${HERMES_STATE_DIR:-./data/state}:/opt/hermes-aidlc/.hermes
+      - ${PROJECTS_DIR:?PROJECTS_DIR must be set in .env}:/workspace/projects:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=1g,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    networks: [hermes-internal]
+
+networks:
+  hermes-internal:
+    driver: bridge

@@ -1,14 +1,32 @@
+# Hermes runtime state and secrets
+.hermes/
 .env
 .env.*
 !.env.example
-.idea/
-.vscode/
-node_modules/
+!.env.*.example
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+
+# VPS runtime data
+deploy/vps/data/
+deploy/vps/backups/
+
+# Python
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.venv/
+
+# JavaScript and logs
+node_modules/
+*.log
+
+# Editors and operating systems
+.idea/
+.vscode/
 .DS_Store
 Thumbs.db
-*.log
